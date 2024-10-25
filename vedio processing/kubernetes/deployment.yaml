@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vedio processing
+  labels:
+    app: vedio processing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vedio processing
+  template:
+    metadata:
+      labels:
+        app: vedio processing
+    spec:
+      containers:
+        - name: vedio processing
+          image: "username/vedio processing:latest"
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
